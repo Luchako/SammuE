@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAMMY-E - Plateforme de Commande</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .gradient-bg { background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%); }
+        .card-hover { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .card-hover:hover { transform: translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.1); }
+        .hidden { display: none; }
+        .tab-active { background-color: #1e40af; color: white; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-lg sticky top-0 z-50">
+        <nav class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <img src="LOGO-SAMMY-E-03.png" alt="Logo" class="h-12 w-auto">
+                </div>
+                <div class="flex space-x-2 sm:space-x-6">
+                    <button onclick="showTab('client')" id="clientTab" class="px-2 py-2 text-xs sm:px-4 sm:text-base rounded-lg tab-active">Interface Client</button>
+                    <button onclick="showTab('admin')" id="adminTab" class="px-2 py-2 text-xs sm:px-4 sm:text-base rounded-lg bg-gray-200 text-gray-700 hover:bg-gray-300">🔒 Admin</button>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs sm:text-sm text-gray-600">Live</span>
+                    <div class="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 rounded-full"></div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- CLIENT INTERFACE -->
+    <div id="clientInterface" class="client-section">
+        <!-- Hero Section -->
+        <section class="gradient-bg text-white py-16">
+            <div class="container mx-auto px-6 text-center">
+                <h2 class="text-4xl font-bold mb-6">Commandez Facilement sur SAMMY-E</h2>
+                <p class="text-xl mb-8 max-w-2xl mx-auto">
+                    Votre partenaire d'achat international en Haïti. 
+                    Livraison rapide et sécurisée.
+                </p>
+                <button onclick="document.getElementById('orderForm').scrollIntoView()" class="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+                    Passer une Commande
+                </button>
+            </div>
+        </section>
+
+        <!-- Order Form -->
+        <section id="orderForm" class="py-16">
+            <div class="container mx-auto px-6">
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold text-center mb-12">Nouvelle Commande</h2>
+                    
+                    <form id="clientOrderForm" class="bg-white p-8 rounded-xl shadow-lg">
+                        <!-- Client Info -->
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold mb-4 text-blue-600">Informations Client</h3>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Nom Complet </label>
+                                    <input type="text" name="clientName" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Téléphone </label>
+                                    <input type="tel" name="clientPhone" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Email</label>
+                                    <input type="email" name="clientEmail" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Zone de Livraison </label>
+                                    <input type="text" name="deliveryZone" required placeholder="Votre zone de livraison" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+                            <div class="mt-4">
+                                <label class="block text-gray-700 font-medium mb-2">Adresse de Livraison </label>
+                                <textarea name="deliveryAddress" required rows="2" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Product Info -->
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold mb-4 text-blue-600">Détails du Produit</h3>
+                            <div class="space-y-4" id="productsList">
+                                <div class="product-item border border-gray-200 rounded-lg p-4">
+                                    <div class="grid md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-gray-700 font-medium mb-2">Plateforme </label>
+                                            <select name="platform" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                                <option value="">Choisir une plateforme</option>
+                                                <option value="Amazon">Amazon</option>
+                                                <option value="Alibaba">Alibaba</option>
+                                                <option value="Shein">Shein</option>
+                                                <option value="Temu">Temu</option>
+                                                <option value="AliExpress">AliExpress</option>
+                                                <option value="eBay">eBay</option>
+                                                <option value="Autre">Autre</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 font-medium mb-2">Quantité </label>
+                                            <input type="number" name="quantity" min="1" value="1" required class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        </div>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="block text-gray-700 font-medium mb-2">Lien du Produit </label>
+                                        <input type="url" name="productUrl" required placeholder="https://..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="block text-gray-700 font-medium mb-2">Description du Produit </label>
+                                        <textarea name="productDescription" required rows="3" placeholder="Nom du produit, couleur, taille, etc." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                    </div>
+                                    <div class="mt-4">
+                                        <label class="block text-gray-700 font-medium mb-2">Prix Estimé (USD)</label>
+                                        <input type="number" name="estimatedPrice" step="0.01" min="0" placeholder="0.00" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="button" onclick="addProduct()" class="mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                                + Ajouter un Produit
+                            </button>
+                        </div>
+
+                        <!-- Additional Info -->
+                        <div class="mb-8">
+                            <h3 class="text-xl font-semibold mb-4 text-blue-600">Informations Supplémentaires</h3>
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Urgence de la Commande</label>
+                                    <select name="urgency" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                        <option value="Standard">Standard (7-14 jours)</option>
+                                        <option value="Express">Express (3-7 jours) - +15%</option>
+                                        <option value="Urgent">Urgent (1-3 jours) - +30%</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 font-medium mb-2">Instructions Spéciales</label>
+                                    <textarea name="specialInstructions" rows="3" placeholder="Couleur préférée, taille, instructions de livraison..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit -->
+                        <div class="text-center">
+                            <button type="submit" class="bg-blue-600 text-white px-12 py-4 rounded-lg font-semibold hover:bg-blue-700 transition text-lg">
+                                🛒 Envoyer ma Commande
+                            </button>
+                            <p class="text-sm text-gray-600 mt-2">
+                                📧 Vous recevrez confirmation par email • 📱 Nous vous contacterons dans les 24h
+                            </p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Info -->
+        <section class="bg-gray-100 py-16">
+            <div class="container mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12">Nos Services</h2>
+                <div class="grid md:grid-cols-3 gap-8">
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <div class="text-4xl mb-4">🛒</div>
+                        <h3 class="text-xl font-semibold mb-2">Achat Sécurisé</h3>
+                        <p class="text-gray-600">Nous achetons vos produits sur les plateformes internationales</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <div class="text-4xl mb-4">🚚</div>
+                        <h3 class="text-xl font-semibold mb-2">Livraison Rapide</h3>
+                        <p class="text-gray-600">Livraison rapide et sécurisée partout en Haïti</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-lg text-center">
+                        <div class="text-4xl mb-4">💰</div>
+                        <h3 class="text-xl font-semibold mb-2">Prix Transparents</h3>
+                        <p class="text-gray-600">Commission de 10-15% + frais de livraison</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- ADMIN INTERFACE -->
+    <div id="adminInterface" class="admin-section hidden">
+        <div class="container mx-auto px-4 sm:px-6 py-4 sm:py-8">
+            <div class="flex justify-between items-center mb-4 sm:mb-8">
+                <h2 class="text-xl sm:text-3xl font-bold">Tableau de Bord Admin</h2>
+                <button onclick="logoutAdmin()" class="text-sm px-3 py-1 bg-red-100 text-red-600 rounded-lg hover:bg-red-200">
+                    🔓 Déconnexion
+                </button>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-8">
+                <div class="bg-white p-3 sm:p-6 rounded-xl shadow-lg">
+                    <h3 class="text-sm sm:text-lg font-semibold text-gray-600">Total</h3>
+                    <p class="text-xl sm:text-3xl font-bold text-blue-600" id="totalOrders">0</p>
+                </div>
+                <div class="bg-white p-3 sm:p-6 rounded-xl shadow-lg">
+                    <h3 class="text-sm sm:text-lg font-semibold text-gray-600">Attente</h3>
+                    <p class="text-xl sm:text-3xl font-bold text-orange-600" id="pendingOrders">0</p>
+                </div>
+                <div class="bg-white p-3 sm:p-6 rounded-xl shadow-lg">
+                    <h3 class="text-sm sm:text-lg font-semibold text-gray-600">En Cours</h3>
+                    <p class="text-xl sm:text-3xl font-bold text-yellow-600" id="processingOrders">0</p>
+                </div>
+                <div class="bg-white p-3 sm:p-6 rounded-xl shadow-lg">
+                    <h3 class="text-sm sm:text-lg font-semibold text-gray-600">Livrées</h3>
+                    <p class="text-xl sm:text-3xl font-bold text-green-600" id="deliveredOrders">0</p>
+                </div>
+            </div>
+
+            <!-- Orders Management -->
+            <div class="bg-white rounded-xl shadow-lg">
+                <div class="p-3 sm:p-6 border-b">
+                    <h3 class="text-lg sm:text-xl font-semibold">Gestion des Commandes</h3>
+                </div>
+                <div class="p-3 sm:p-6">
+                    <div class="mb-4">
+                        <input type="text" id="searchOrders" placeholder="Rechercher..." class="w-full px-3 py-2 sm:px-4 text-sm sm:text-base border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full min-w-full">
+                            <thead>
+                                <tr class="border-b">
+                                    <th class="text-left p-2 text-xs sm:p-3 sm:text-sm">ID</th>
+                                    <th class="text-left p-2 text-xs sm:p-3 sm:text-sm">Client</th>
+                                    <th class="text-left p-2 text-xs sm:p-3 sm:text-sm hidden sm:table-cell">Produits</th>
+                                    <th class="text-left p-2 text-xs sm:p-3 sm:text-sm hidden md:table-cell">Zone</th>
+                                    <th class="text-left p-2 text-xs sm:p-3 sm:text-sm hidden md:table-cell">Date</th>
+                                    <th class="text-left p-2 text-xs sm:p-3 sm:text-sm">Statut</th>
+                                    <th class="text-left p-2 text-xs sm:p-3 sm:text-sm">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTableBody">
+                                <tr>
+                                    <td colspan="7" class="text-center p-8 text-gray-500">
+                                        Aucune commande pour le moment
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-6">
+            <div class="grid md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <img src="LOGO-SAMMY-E-03.png" alt="Logo" class="h-8 w-auto">
+                    </div>
+                    <p class="text-gray-400">Votre partenaire d'achat international en Haïti</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Service</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>🚚 Livraison disponible</li>
+                        <li>📦 Suivi en temps réel</li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Contact</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li>📞 + (509) 3123-0216</li>
+                        <li>📧 sammyexpress05@gmail.com</li>
+                        <li>🚚 Livraison en Haïti</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2025 SAMMY-E. Tous droits réservés.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script type="module">
+        // Global variables
+        let orders = JSON.parse(localStorage.getItem('sammyOrders')) || [];
+        let orderIdCounter = parseInt(localStorage.getItem('sammyOrderCounter')) || 1;
+
+        // Admin authentication
+        let isAdminAuthenticated = false;
+        const ADMIN_PASSWORD = 'sammy2025'; // Changez ce mot de passe
+
+        // Tab switching
+        window.showTab = function(tab) {
+            const clientInterface = document.getElementById('clientInterface');
+            const adminInterface = document.getElementById('adminInterface');
+            const clientTab = document.getElementById('clientTab');
+            const adminTab = document.getElementById('adminTab');
+
+            if (tab === 'client') {
+                clientInterface.classList.remove('hidden');
+                adminInterface.classList.add('hidden');
+                clientTab.classList.add('tab-active');
+                clientTab.classList.remove('bg-gray-200', 'text-gray-700');
+                adminTab.classList.remove('tab-active');
+                adminTab.classList.add('bg-gray-200', 'text-gray-700');
+            } else {
+                // Vérifier l'authentification admin
+                if (!isAdminAuthenticated) {
+                    const password = prompt('🔒 Accès Admin - Entrez le mot de passe:');
+                    if (password !== ADMIN_PASSWORD) {
+                        alert('❌ Mot de passe incorrect. Accès refusé.');
+                        return;
+                    }
+                    isAdminAuthenticated = true;
+                    alert('✅ Authentification réussie. Bienvenue Admin!');
+                }
+                
+                clientInterface.classList.add('hidden');
+                adminInterface.classList.remove('hidden');
+                adminTab.classList.add('tab-active');
+                admin
